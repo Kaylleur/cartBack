@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestSalesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="TestSalesModelStoreContainer">
+          <EntitySet Name="cart" EntityType="TestSalesModel.Store.cart" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="product" EntityType="TestSalesModel.Store.product" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="productCart" EntityType="TestSalesModel.Store.productCart" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="user" EntityType="TestSalesModel.Store.user" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_cart_user" Association="TestSalesModel.Store.FK_cart_user">
+            <End Role="user" EntitySet="user" />
+            <End Role="cart" EntitySet="cart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_productCart_cart" Association="TestSalesModel.Store.FK_productCart_cart">
+            <End Role="cart" EntitySet="cart" />
+            <End Role="productCart" EntitySet="productCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_productCart_product" Association="TestSalesModel.Store.FK_productCart_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="productCart" EntitySet="productCart" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="cart">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="idUser" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="label" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="price" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="productCart">
+          <Key>
+            <PropertyRef Name="idCart" />
+            <PropertyRef Name="idProduct" />
+          </Key>
+          <Property Name="idCart" Type="int" Nullable="false" />
+          <Property Name="idProduct" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <Association Name="FK_cart_user">
+          <End Role="user" Type="TestSalesModel.Store.user" Multiplicity="1" />
+          <End Role="cart" Type="TestSalesModel.Store.cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cart">
+              <PropertyRef Name="idUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_productCart_cart">
+          <End Role="cart" Type="TestSalesModel.Store.cart" Multiplicity="1" />
+          <End Role="productCart" Type="TestSalesModel.Store.productCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cart">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="productCart">
+              <PropertyRef Name="idCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_productCart_product">
+          <End Role="product" Type="TestSalesModel.Store.product" Multiplicity="1" />
+          <End Role="productCart" Type="TestSalesModel.Store.productCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="productCart">
+              <PropertyRef Name="idProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TestSalesModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TestSalesEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="cart" EntityType="TestSalesModel.cart" />
+          <EntitySet Name="product" EntityType="TestSalesModel.product" />
+          <EntitySet Name="productCart" EntityType="TestSalesModel.productCart" />
+          <EntitySet Name="user" EntityType="TestSalesModel.user" />
+          <AssociationSet Name="FK_productCart_cart" Association="TestSalesModel.FK_productCart_cart">
+            <End Role="cart" EntitySet="cart" />
+            <End Role="productCart" EntitySet="productCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_productCart_product" Association="TestSalesModel.FK_productCart_product">
+            <End Role="product" EntitySet="product" />
+            <End Role="productCart" EntitySet="productCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cart_user2" Association="TestSalesModel.FK_cart_user2">
+            <End Role="user" EntitySet="user" />
+            <End Role="cart" EntitySet="cart" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="cart">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Type="Int32" Name="idUser" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="TestSalesModel.FK_cart_user2" FromRole="cart" ToRole="user" />
+          <NavigationProperty Name="products" Relationship="TestSalesModel.FK_productCart_cart" FromRole="cart" ToRole="productCart" />
+        </EntityType>
+        <EntityType Name="product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="price" Type="Double" Nullable="false" />
+        </EntityType>
+        <EntityType Name="productCart">
+          <Key>
+            <PropertyRef Name="idCart" />
+            <PropertyRef Name="idProduct" />
+          </Key>
+          <Property Name="idCart" Type="Int32" Nullable="false" />
+          <Property Name="idProduct" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="product" Relationship="TestSalesModel.FK_productCart_product" FromRole="productCart" ToRole="product" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="password" Type="String" MaxLength="250" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_productCart_cart">
+          <End Role="cart" Type="TestSalesModel.cart" Multiplicity="1" />
+          <End Role="productCart" Type="TestSalesModel.productCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cart">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="productCart">
+              <PropertyRef Name="idCart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_productCart_product">
+          <End Role="product" Type="TestSalesModel.product" Multiplicity="1" />
+          <End Role="productCart" Type="TestSalesModel.productCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="productCart">
+              <PropertyRef Name="idProduct" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cart_user2">
+          <End Type="TestSalesModel.user" Role="user" Multiplicity="1" />
+          <End Type="TestSalesModel.cart" Role="cart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cart">
+              <PropertyRef Name="idUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TestSalesModelStoreContainer" CdmEntityContainer="TestSalesEntities">
+          <EntitySetMapping Name="cart">
+            <EntityTypeMapping TypeName="TestSalesModel.cart">
+              <MappingFragment StoreEntitySet="cart">
+                <ScalarProperty Name="idUser" ColumnName="idUser" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="product">
+            <EntityTypeMapping TypeName="TestSalesModel.product">
+              <MappingFragment StoreEntitySet="product">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="price" ColumnName="price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="productCart">
+            <EntityTypeMapping TypeName="TestSalesModel.productCart">
+              <MappingFragment StoreEntitySet="productCart">
+                <ScalarProperty Name="idCart" ColumnName="idCart" />
+                <ScalarProperty Name="idProduct" ColumnName="idProduct" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user">
+            <EntityTypeMapping TypeName="TestSalesModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

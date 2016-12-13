@@ -1,0 +1,8 @@
+testApi.log
+testApi.csproj
+testApi.csproj.user
+Web.Debug.config
+Web.Release.config
+
+obj/
+bin/
