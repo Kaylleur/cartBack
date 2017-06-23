@@ -18,8 +18,7 @@ namespace testApi.Controllers
         private static readonly ILog log = LogManager.GetLogger("Logger");
         private TestSalesEntities db = new TestSalesEntities();
 
-        // GET api/Users
-        public HttpResponseMessage Getusers()
+        public HttpResponseMessage GetUsers()
         {
             try
             {
@@ -27,15 +26,14 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if(log.IsDebugEnabled)log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
             
         }
 
-        // GET api/Users/5
-        public HttpResponseMessage Getuser(int id)
+        public HttpResponseMessage GetUser(int id)
         {
             try
             {
@@ -49,9 +47,9 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if (log.IsDebugEnabled) log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 

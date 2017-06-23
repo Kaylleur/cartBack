@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace testApi.Models
 {
@@ -20,6 +21,7 @@ namespace testApi.Models
         [Key]
         public int id { get; set; }
         public string name { get; set; }
+        [JsonIgnore]
         public string password { get; set; }
     }
 }

@@ -12,16 +12,22 @@ namespace testApi
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
+        
         {
+            config.MapHttpAttributeRoutes();
             config.Services.Replace(typeof(IContentNegotiator), new JsonContentNegotiator(new JsonMediaTypeFormatter()));
 
-            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
+            //var cors = new EnableCorsAttribute("*", "*", "*");
+            //config.EnableCors(cors);
+          
+           config.Routes.MapHttpRoute(
+               name: "DefaultApi",
+               routeTemplate: "{controller}/{id}",
+               defaults: new { id = RouteParameter.Optional }
+           );
+           
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+
         }
     }
 }

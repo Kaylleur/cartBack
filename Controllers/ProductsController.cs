@@ -27,9 +27,9 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if (log.IsDebugEnabled) log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
@@ -48,9 +48,9 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if (log.IsDebugEnabled) log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 

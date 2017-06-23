@@ -28,9 +28,9 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if (log.IsDebugEnabled) log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
             
         }
@@ -50,35 +50,13 @@ namespace testApi.Controllers
             }
             catch (Exception e)
             {
-                log.Error(e.InnerException.Message);
+                log.Error(e.Message);
                 if (log.IsDebugEnabled) log.Error(e.StackTrace);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.InnerException.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
         }
 
-        // PUT api/Carts/5
-        public HttpResponseMessage Putcart(int id, cart cart)
-        {
-            if (ModelState.IsValid && id == cart.id)
-            {
-                db.Entry(cart).State = EntityState.Modified;
-
-                try
-                {
-                    db.SaveChanges();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound,"NOT_FOUND");
-                }
-
-                return Request.CreateResponse(HttpStatusCode.OK,cart);
-            }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest,"BAD_REQUEST");
-            }
-        }
+        
 
         // POST api/Carts
         public HttpResponseMessage Postcart(cart cart)
@@ -92,10 +70,7 @@ namespace testApi.Controllers
                 response.Headers.Location = new Uri(Url.Link("DefaultApi", new { id = cart.id }));
                 return response;
             }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest,"BAD_REQUEST");
-            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest,"BAD_REQUEST");
         }
 
         // DELETE api/Carts/5
@@ -120,6 +95,74 @@ namespace testApi.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, cart);
         }
+
+
+        [HttpGet]
+        [Route("carts/users/{idUser}")]
+        public HttpResponseMessage GetUserCarts(int idUser)
+        {
+            try
+            {
+                var carts = db.cart.Where(c => c.idUser == idUser).AsEnumerable();
+
+                return Request.CreateResponse(HttpStatusCode.OK, carts);
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                if (log.IsDebugEnabled) log.Error(e.StackTrace);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        //MANAGEMENT OF PRODUCT CARTS
+
+        //ADD
+        [HttpPost]
+        public HttpResponseMessage AddProductCart(productCart productCart)
+        {
+            if (ModelState.IsValid)
+            {
+                db.productCart.Add(productCart);
+                db.SaveChanges();
+
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created, productCart);
+                return response;
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "BAD_REQUEST");
+            
+        }
+
+        //DELETE
+        [HttpDelete]
+        [Route("carts/{idCart}/product/{idProduct}")]
+        public HttpResponseMessage RemoveProductCart(int idCart, int idProduct)
+        {
+            productCart productCart = db.productCart.FirstOrDefault(p => (p.idCart == idCart && p.idProduct == idProduct));
+            if (productCart == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "NOT_FOUND");
+            }
+
+            db.productCart.Remove(productCart);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "NOT_FOUND");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, productCart);
+        }
+
+
+
+
+
+        //OVERRIDE
 
         protected override void Dispose(bool disposing)
         {
